@@ -3,7 +3,7 @@
 Read `AGENTS.md`, `handoff.md`, and the refreshed Stage 5 artifacts, then continue from the new full-dataset baseline of record.
 
 Use this Python command pattern for any shell execution in this repository:
-`& 'C:\Users\golde\.venvs\OliviaMLAssignment\Scripts\python.exe' ...`
+`python ...`
 
 Current result of record:
 - run name: `stage5_refresh_resnet18_ft_linear_lr2e4`
@@ -39,6 +39,6 @@ Important facts:
 - `num_workers > 0` currently fails with `PermissionError: [WinError 5] Access is denied`
 
 Rules:
-- keep the final assignment requirement of real 5-fold CV intact
+- keep the final project requirement of real 5-fold CV intact
 - do not compare refreshed results to stale subset-era metrics without labeling the dataset refresh
 - do not resume packaging until the refreshed notebook and visualization outputs are aligned with the new baseline

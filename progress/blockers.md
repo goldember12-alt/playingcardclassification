@@ -3,8 +3,7 @@
 The main accuracy blocker is no longer dataset availability or sub-90% performance.
 
 Current open constraints:
-- use the repo venv interpreter:
-  - `C:\Users\golde\.venvs\OliviaMLAssignment\Scripts\python.exe`
+- use the active project interpreter
 - the canonical data source remains `data/processed/rank14_from_local_raw/`
 - the environment is CPU-only:
   - `torch.cuda.is_available() == False`

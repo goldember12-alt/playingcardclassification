@@ -1,12 +1,12 @@
 # AGENTS.md
 
 ## Project identity
-This repository exists to complete a machine learning homework assignment on image classification using a pretrained CNN and the Kaggle cards image dataset. The assignment must be completed in a way that is clean, modular, reproducible, and notebook-submission-ready.
+This repository is a standalone machine-learning project for playing-card image classification using a pretrained CNN and the Kaggle cards image dataset. The work should stay clean, modular, reproducible, and ready to present as a polished project.
 
 Working directory:
-`C:\Users\golde\OneDrive - University of Virginia\OliviaMLAssignment`
+`${PROJECT_ROOT}`
 
-## Core assignment requirements
+## Core project requirements
 The final work must satisfy all of the following:
 
 1. Use a pretrained image classification model.
@@ -22,7 +22,7 @@ The final work must satisfy all of the following:
    - at least two number-card classes
 8. If performance is poor (< 90% validation accuracy), apply some form of data augmentation and document the attempt.
 9. The final deliverable must be a Python notebook with visible outputs.
-10. The final submission must be packaged into a folder named `LASTNAME_HW5`, zipped as `LASTNAME_HW5.zip`.
+10. The final release should be packaged into a folder named `playingcardclassification`, zipped as `playingcardclassification.zip`.
 
 ## Working philosophy
 This project should be built in a staged, doc-first way.
@@ -48,7 +48,7 @@ Unless strong evidence suggests otherwise, use the following defaults:
 - Visualization stack: matplotlib, sklearn confusion matrix tools, and saved PNG outputs
 - Reproducibility: fixed random seeds where feasible
 
-These are defaults, not absolute rules. If a different pretrained model is clearly more practical for the assignment, explain the reason before changing course.
+These are defaults, not absolute rules. If a different pretrained model is clearly more practical for the project, explain the reason before changing course.
 
 ## Non-negotiable implementation constraints
 - The final notebook must show visible outputs.
@@ -59,7 +59,7 @@ These are defaults, not absolute rules. If a different pretrained model is clear
   - 2 face-card types
   - 2 number-card types
 - If accuracy is below 90%, at least one augmentation attempt must be added and documented.
-- The code and notebook must save or expose enough outputs for a grader to verify the work.
+- The code and notebook must save or expose enough outputs for a reviewer to verify the work.
 
 ## Repository state at handoff
 At the moment of first handoff, the repository intentionally contains only:
@@ -71,14 +71,14 @@ At the moment of first handoff, the repository intentionally contains only:
 This is expected. The repository is starting from a documentation-first blank state.
 
 ## Primary mission for Codex
-Translate the assignment into a staged implementation that produces:
+Translate the project goals into a staged implementation that produces:
 
 1. a working image classification pipeline
 2. 5-fold cross-validation results
 3. visualizations of performance
 4. feature-map visualizations
-5. a clean final notebook suitable for submission
-6. a submission folder and zip-ready structure
+5. a clean final notebook suitable for sharing
+6. a release folder and zip-ready structure
 
 ## Stage plan
 
@@ -208,10 +208,10 @@ Deliverables:
 - concise record of rationale
 
 ### Stage 9 — Final notebook assembly
-Create the final submission notebook.
+Create the final project notebook.
 
 The notebook should include:
-- assignment overview
+- project overview
 - dataset summary
 - model choice and rationale
 - bottlenecking or fine-tuning explanation
@@ -221,12 +221,12 @@ The notebook should include:
 - feature maps
 - concise conclusion
 
-The notebook should be readable by the grader without requiring them to inspect every module.
+The notebook should be readable without requiring someone to inspect every module.
 
-### Stage 10 — Submission packaging
+### Stage 10 — Release packaging
 Prepare the final handoff structure:
 
-- folder named `LASTNAME_HW5`
+- folder named `playingcardclassification`
 - all needed files included
 - notebook included with outputs visible
 - zip-ready layout
@@ -264,15 +264,15 @@ A good result is not just high accuracy. A good result must also be:
 - well organized
 - clearly explained
 - reproducible
-- easy to grade
-- visibly compliant with every assignment requirement
+- easy to review
+- visibly compliant with every project requirement
 
 ## Things to avoid
 - do not hide all logic in the notebook
 - do not skip feature maps
 - do not hardcode assumptions without explanation
 - do not run large uncontrolled experiments without recording them
-- do not prioritize cosmetic polish over completing assignment requirements
+- do not prioritize cosmetic polish over completing project requirements
 - do not claim cross-validation unless all 5 folds are actually executed or explicitly staged and documented
 
 ## Expected communication style from Codex

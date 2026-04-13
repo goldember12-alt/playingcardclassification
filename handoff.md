@@ -24,8 +24,7 @@ The current result of record is now:
 - CPU execution
 - mean 5-fold validation accuracy: `0.9619813205 +/- 0.0067484664`
 
-Environment note: use the repo venv interpreter for shell commands in this repository:
-`C:\Users\golde\.venvs\OliviaMLAssignment\Scripts\python.exe`
+Environment note: use the active project interpreter for shell commands in this repository.
 
 ## What was completed
 - Read `AGENTS.md` and `handoff.md`, then continued from the prior result of record:
@@ -79,9 +78,9 @@ Modified files:
   - comparison discovery now supports cases where the current record is the improved Stage 8 run
   - notebook narrative no longer hardcodes refreshed `ResNet18` as the record model
   - conclusion cell now reports the correct record status when the improved run is the current winner
-- `notebooks/HW5_cards_classification.ipynb`
+- the executed notebook artifact under `notebooks/`
   - regenerated and executed with the new `resnet50` result of record and refreshed downstream artifacts
-- `notebooks/exports/HW5_cards_classification.html`
+- the HTML export under `notebooks/exports/`
   - regenerated from the executed notebook
 - `handoff.md`
   - rewritten for the current state
@@ -246,9 +245,9 @@ Stage 7 summary:
 
 Refreshed Stage 9 notebook artifacts:
 - notebook:
-  - `notebooks/HW5_cards_classification.ipynb`
+  - executed project notebook under `notebooks/`
 - HTML export:
-  - `notebooks/exports/HW5_cards_classification.html`
+  - rendered export under `notebooks/exports/`
 
 ## Runtime notes
 - The first end-to-end `resnet50` run attempt hit the command wall-clock timeout at `21600s` (`6` hours).
@@ -350,7 +349,7 @@ Interpretation:
 - Vanilla notebook execution through `jupyter nbconvert --execute` is still blocked by the Windows secure-write permission error:
   - `PermissionError: [WinError 5] Access is denied`
 - The current record is stronger than the prior `resnet18` result, but still below the stretch target of `0.97+` mean validation accuracy.
-- Because the improvement over the prior `resnet18` record is modest and runtime is already high on CPU, further accuracy search is not recommended before packaging unless the assignment explicitly demands more experimentation.
+- Because the improvement over the prior `resnet18` record is modest and runtime is already high on CPU, further accuracy search is not recommended before packaging unless the project scope explicitly demands more experimentation.
 - The one-fold `EfficientNet-B0` result reduces confidence that a new backbone swap will beat the current `resnet50` record under the strict canonical protocol without broader tuning.
 
 ## Exact recommended next prompt
@@ -358,19 +357,19 @@ Read `AGENTS.md` and `handoff.md`, then continue from the current result of reco
 `stage8_refresh_resnet50_ft_linear_lr1e4_e3`.
 
 Use this Python command pattern for shell execution:
-`& 'C:\Users\golde\.venvs\OliviaMLAssignment\Scripts\python.exe' ...`
+`python ...`
 
 Mission:
 - stop accuracy search
 - freeze `stage8_refresh_resnet50_ft_linear_lr1e4_e3` as the final result of record
-- complete Stage 10 packaging for submission
+- complete Stage 10 release packaging
 
 Required packaging work:
-- create `LASTNAME_HW5`
+- create `playingcardclassification`
 - copy the final notebook with visible outputs
-- include the supporting files needed for grading and reproducibility
+- include the supporting files needed for review and reproducibility
 - keep the folder layout zip-ready
-- prepare `LASTNAME_HW5.zip`
+- prepare `playingcardclassification.zip`
 
 Do not:
 - start a new architecture sweep

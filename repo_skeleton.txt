@@ -1,4 +1,4 @@
-OliviaMLAssignment/
+playingcardclassification/
 ├── AGENTS.md
 ├── README.md
 ├── handoff.md
@@ -13,7 +13,7 @@ OliviaMLAssignment/
 │   └── processed/
 │       └── .gitkeep
 ├── notebooks/
-│   ├── HW5_cards_classification.ipynb
+│   ├── playingcardclassification.ipynb
 │   └── exports/
 │       └── .gitkeep
 ├── src/
@@ -79,7 +79,7 @@ AGENTS.md
 - Defines requirements, order of work, and documentation rules.
 
 README.md
-- Human-readable project overview and assignment summary.
+- Human-readable project overview and repository summary.
 
 handoff.md
 - Live state of the project at each handoff.
@@ -88,8 +88,8 @@ handoff.md
 requirements.txt
 - Python dependencies for the project.
 
-notebooks/HW5_cards_classification.ipynb
-- Final notebook submission artifact.
+notebooks/playingcardclassification.ipynb
+- Final notebook/report artifact.
 
 src/data/
 - Dataset loading, fold generation, and transforms.

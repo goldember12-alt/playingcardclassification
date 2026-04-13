@@ -5,7 +5,7 @@
 - Initial transfer-learning strategy: bottlenecking.
 - Notebook assembly is deferred until the reusable pipeline is working.
 - Canonical dataset discovery now defaults to the derived processed dataset under `data/processed/rank14_from_local_raw/`, while raw-data auditing still targets `data/raw/` when explicitly requested.
-- Stage 1 assumes the assignment's expected 14 rank classes are `ace` through `king` plus `joker`, but the loader validates against whatever is actually present locally.
+- Stage 1 assumes the project's expected 14 rank classes are `ace` through `king` plus `joker`, but the loader validates against whatever is actually present locally.
 - Dataset summaries are generated from discovered files rather than a hardcoded dataset folder name.
 - Stage 2 fold generation works from an item-level metadata inventory rather than re-reading directory trees ad hoc.
 - For flat class-folder datasets, folds are generated from the `all` split.
@@ -14,15 +14,14 @@
 - Stage 3 defaults to a pretrained `ResNet50` backbone with the original classification layer removed and replaced by a project-specific classifier head.
 - Bottlenecking remains the default: backbone parameters are frozen unless an explicit unfreeze stage is requested.
 - The baseline classifier head defaults to a single linear layer, with optional hidden dimension and dropout hooks reserved for later controlled experiments.
-- The repo-local venv created by `bootstrap.ps1` is now the preferred interpreter for all future repo commands:
-  - `C:\Users\golde\.venvs\OliviaMLAssignment\Scripts\python.exe`
+- Use the active project interpreter for repo commands; a repo-local venv remains a valid option when continuing an existing setup.
 - Stage 4 builds one-fold training from Stage 1 datasets, Stage 2 fold assignments, and Stage 3 model builders rather than introducing a separate training-only data path.
 - Per-epoch metrics are saved as CSV, and the best fold checkpoint is saved with a deterministic fold-specific filename.
 - CPU is the default execution path, with CUDA used only when explicitly requested or automatically available.
 - The local raw data audit found a split-based folder tree at `data/raw/`, but it currently reflects only a partial subset of the cards dataset.
 - `cards.csv` is the authoritative local metadata file for the current raw drop:
   - 53 suit-specific labels
-  - 14 rank targets after normalizing CSV rank `xxx` to assignment label `joker`
+  - 14 rank targets after normalizing CSV rank `xxx` to project label `joker`
   - expected splits: `train`, `valid`, `test`
 - The on-disk folder tree is inconsistent with that metadata:
   - `valid/` is missing locally
@@ -33,7 +32,7 @@
 - Because the raw split tree is all the user currently has access to, the repo now treats a derived processed dataset as the canonical training source instead of waiting for a corrected raw drop.
 - The canonical Stage 5 dataset is:
   - `data/processed/rank14_from_local_raw/`
-  - flat class directories for the 14 assignment ranks
+  - flat class directories for the 14 project ranks
   - built from all existing raw `train/` and `test/` images
 - Suit-specific card labels are collapsed into ranks by:
   - `joker -> joker`
@@ -89,14 +88,12 @@
   - every fold performed worse than baseline
 - For Stage 9 notebook assembly, the Stage 5 baseline should remain the primary result, while Stage 8 should be presented as the required documented augmentation attempt that did not help.
 - Stage 9 reuses the saved Stage 5 through Stage 8 artifacts instead of rerunning training inside the notebook.
-- The final notebook of record is:
-  - `notebooks/HW5_cards_classification.ipynb`
+- The final notebook of record is the executed notebook artifact under `notebooks/`.
   - executed with visible outputs
 - A reproducible builder script now owns notebook assembly:
   - `scripts/build_stage9_notebook.py`
 - The notebook's main narrative keeps the Stage 5 baseline as the primary model result and uses Stage 8 as a comparison section showing the unsuccessful augmentation attempt.
-- A grader-friendly HTML export was also produced:
-  - `notebooks/exports/HW5_cards_classification.html`
+- A reviewer-friendly HTML export was also produced under `notebooks/exports/`.
 - Notebook execution in this environment requires a documented Jupyter workaround on Windows:
   - `JUPYTER_ALLOW_INSECURE_WRITES=true`
   - `JUPYTER_RUNTIME_DIR=.tmp\\jupyter_runtime`
@@ -144,7 +141,7 @@
   - the earlier "partial subset only" data assumption is obsolete because the raw Kaggle dataset was restored locally
   - `data/raw/` now contains `8154` image files across the original `train`, `valid`, and `test` splits
   - `cards.csv` has `8155` rows, but the one-row mismatch is a non-image path: `train/ace of clubs/output`
-  - `data/processed/rank14_from_local_raw/` was rebuilt from the restored raw tree and now contains all `8154` images in the 14 assignment classes
+  - `data/processed/rank14_from_local_raw/` was rebuilt from the restored raw tree and now contains all `8154` images in the 14 project classes
   - previously reported Stage 5 and Stage 8 accuracies should now be treated as stale with respect to the refreshed dataset
   - the two local reference notebooks strongly suggest the next serious path should prioritize:
     - full fine-tuning over frozen transfer learning
@@ -169,4 +166,4 @@
   - LR `2e-4`
   - no augmentation
   - 1 epoch per fold
-- The refreshed 5-fold baseline of record achieved mean validation accuracy about `0.9218`, so the assignment is now above the `90%` threshold on the current dataset of record.
+- The refreshed 5-fold baseline of record achieved mean validation accuracy about `0.9218`, so the project is now above the `90%` threshold on the current dataset of record.
