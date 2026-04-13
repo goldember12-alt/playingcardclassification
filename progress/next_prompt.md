@@ -1,44 +1,41 @@
 # Next Prompt
 
-Read `AGENTS.md`, `handoff.md`, and the refreshed Stage 5 artifacts, then continue from the new full-dataset baseline of record.
+Read `AGENTS.md`, `handoff.md`, and the current canonical full-dataset artifacts, then continue from the current result of record.
 
-Use this Python command pattern for any shell execution in this repository:
-`python ...`
+Use the active project interpreter for any shell execution in this repository rather than assuming a specific launcher alias.
 
 Current result of record:
-- run name: `stage5_refresh_resnet18_ft_linear_lr2e4`
-- backbone: pretrained `resnet18`
+- run name: `stage8_refresh_resnet50_ft_linear_lr1e4_e3`
+- backbone: pretrained `resnet50`
 - strategy: full fine-tuning
 - head: linear
 - optimizer: `AdamW`
-- LR: `2e-4`
-- epochs: `1`
-- mean 5-fold validation accuracy: `0.9218`
+- LR: `1e-4`
+- epochs: `3`
+- mean 5-fold validation accuracy: `0.9619813205 +/- 0.0067484664`
 
 Mission:
-1. refresh downstream outputs so they match the new baseline
+1. keep public-facing docs and generated artifacts aligned with the current canonical run
 2. do not reopen a broad architecture search
-3. only consider one narrow follow-up accuracy pass after the reporting pipeline is current again
+3. if more modeling work is needed, keep it to one bounded follow-up experiment
 
 Priority order:
-- regenerate Stage 6 visualizations from the refreshed Stage 5 checkpoints
-- regenerate Stage 7 feature maps from the refreshed best checkpoint
-- refresh the Stage 9 notebook so it reflects the refreshed full-dataset baseline
+- verify documentation and notebook text against the current dataset and result-of-record artifacts
+- refresh any downstream summaries if a stronger canonical run is added
 - only then consider a tightly scoped follow-up such as:
-  - a 2-epoch rerun of the selected `resnet18` strategy
-  - or a single direct `resnet50` full 5-fold confirmation if runtime is acceptable
+  - one bounded higher-accuracy rerun of the current `resnet50` recipe
+  - or one direct comparison against a single alternative architecture if runtime is acceptable
 
 Important facts:
 - the canonical dataset remains `data/processed/rank14_from_local_raw/`
-- the refreshed strategy screen already ran and its summary artifacts live under `outputs/logs/refresh_full_dataset_screen_*`
-- the refreshed Stage 5 artifacts already exist under:
-  - `outputs/folds/stage5_refresh_resnet18_ft_linear_lr2e4_*`
-  - `outputs/logs/stage5_refresh_resnet18_ft_linear_lr2e4_*`
-  - `outputs/checkpoints/stage5_refresh_resnet18_ft_linear_lr2e4_fold_*`
+- the current result-of-record artifacts already exist under:
+  - `outputs/folds/stage8_refresh_resnet50_ft_linear_lr1e4_e3_*`
+  - `outputs/logs/stage8_refresh_resnet50_ft_linear_lr1e4_e3_*`
+  - `outputs/checkpoints/stage8_refresh_resnet50_ft_linear_lr1e4_e3_fold_*`
 - the environment is CPU-only
 - `num_workers > 0` currently fails with `PermissionError: [WinError 5] Access is denied`
 
 Rules:
 - keep the final project requirement of real 5-fold CV intact
-- do not compare refreshed results to stale subset-era metrics without labeling the dataset refresh
-- do not resume packaging until the refreshed notebook and visualization outputs are aligned with the new baseline
+- do not compare canonical full-dataset results to subset-era metrics without labeling the dataset refresh
+- keep the notebook/report aligned with the strongest canonical full-dataset run

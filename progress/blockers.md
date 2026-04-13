@@ -1,6 +1,6 @@
 # Blockers
 
-The main accuracy blocker is no longer dataset availability or sub-90% performance.
+The main project blockers are no longer dataset availability or sub-90% performance.
 
 Current open constraints:
 - use the active project interpreter
@@ -11,12 +11,7 @@ Current open constraints:
   - `num_workers > 0` raised `PermissionError: [WinError 5] Access is denied`
   - practical implication: runs currently use `num_workers=0`
 
-Current procedural blocker:
-- downstream reporting is now stale relative to the refreshed Stage 5 baseline
-- specifically, Stage 6, Stage 7, and the Stage 9 notebook still need to be regenerated from:
-  - `stage5_refresh_resnet18_ft_linear_lr2e4`
-
-Packaging remains intentionally blocked until:
-- refreshed visualizations are regenerated
-- refreshed feature maps are regenerated
-- the notebook is updated to reflect the refreshed baseline of record
+Current procedural caution:
+- if any new canonical run is added, downstream summaries must be refreshed from that run rather than left pointing at older artifacts
+- packaging or sharing should use the current record run:
+  - `stage8_refresh_resnet50_ft_linear_lr1e4_e3`

@@ -40,32 +40,32 @@ This project works at the rank level rather than the full 53-card identity level
 - `joker`
 
 ## Local dataset audit
-The repository contains local raw data under `data/raw/`, but the raw split tree is not treated as the direct training source.
+The repository contains the local raw data under `data/raw/`, but the training pipeline uses a normalized 14-rank dataset derived from that tree.
 
 Observed local state:
 - `data/raw/train/` exists
+- `data/raw/valid/` exists
 - `data/raw/test/` exists
-- `data/raw/valid/` does not exist
 - `data/raw/cards.csv` exists and describes a 53-label deck dataset that can be normalized into 14 rank targets
 - `data/raw/14card types-14-(200 X 200)-94.61.h5` and `data/raw/53cards-53-(200 X 200)-100.00.h5` are Keras artifacts, not image directories for the PyTorch pipeline
 
 Current reconciliation result:
-- the folder tree on disk contains only `1,866` of the `8,155` image paths referenced by `cards.csv`
-- the discovered folder labels are 53 suit-specific card identities, not the 14 rank targets used by this project
-- the metadata schema can still be normalized to the 14 rank classes because CSV rank `xxx` maps to `joker`
+- the raw image tree contains `8,154` playable-card images across the original `train`, `valid`, and `test` splits
+- `cards.csv` has `8,155` rows, with one non-image path (`train/ace of clubs/output`) accounting for the mismatch
+- the discovered folder labels are still 53 suit-specific card identities, so the pipeline normalizes them into the 14 rank targets used by this project
 
 ## Canonical local dataset source
-The repo derives a complete local 14-rank dataset from the images that do exist locally and uses that as the canonical training source:
+The repo derives a complete local 14-rank dataset from the raw image tree and uses that as the canonical training source:
 
 - dataset root: `data/processed/rank14_from_local_raw/`
 - layout: flat class directories from `ace` through `joker`
-- total images: `1,866`
-- derivation method: existing raw `train/` and `test/` images are grouped by rank, collapsing suit-specific labels into rank labels
+- total images: `8,154`
+- derivation method: raw `train/`, `valid/`, and `test/` images are grouped by rank, collapsing suit-specific labels into rank labels
 - storage mode: hard links back to the original raw image files
 - manifest: `data/processed/rank14_from_local_raw/manifest.csv`
 - summary: `data/processed/rank14_from_local_raw/summary.json`
 
-This supports strict 5-fold stratified cross-validation because every class has at least five examples. The main caveat is severe class imbalance, especially `joker` with only five images.
+This supports strict 5-fold stratified cross-validation because every class has at least five examples. The dataset is still imbalanced, but the smallest class is now `joker` with `125` images.
 
 ## Current result of record
 The strongest run currently documented in the repo is:

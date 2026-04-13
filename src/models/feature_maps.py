@@ -122,6 +122,39 @@ def _load_stage5_summary(stage5_summary_path: str | Path | None = None) -> dict[
         return json.load(handle)
 
 
+def _dataset_balance_note(stage5_summary: dict[str, Any]) -> str:
+    fold_summary = stage5_summary.get("fold_summary", {})
+    counts = {
+        str(class_name): int(count)
+        for class_name, count in dict(fold_summary.get("pool_class_counts", {})).items()
+    }
+    if not counts:
+        return "The dataset remains imbalanced, but class-count details were not available in the saved run summary."
+
+    smallest_class_name, smallest_class_count = min(counts.items(), key=lambda item: (item[1], item[0]))
+    validation_counts = [
+        int(class_counts.get(smallest_class_name, 0))
+        for class_counts in dict(fold_summary.get("validation_class_counts", {})).values()
+    ]
+    if validation_counts:
+        min_count = min(validation_counts)
+        max_count = max(validation_counts)
+        if min_count == max_count:
+            fold_detail = f"Each validation fold includes {min_count} `{smallest_class_name}` examples."
+        else:
+            fold_detail = (
+                f"Validation folds include between {min_count} and {max_count} "
+                f"`{smallest_class_name}` examples."
+            )
+    else:
+        fold_detail = "Per-fold validation counts were not available in the saved summary."
+
+    return (
+        f"The dataset remains imbalanced; `{smallest_class_name}` is the smallest class with "
+        f"{smallest_class_count} images. {fold_detail}"
+    )
+
+
 def _best_checkpoint_row(stage5_summary: dict[str, Any]) -> dict[str, Any]:
     pandas, _, _ = _require_runtime()
     per_fold = pandas.DataFrame(stage5_summary["per_fold_results"])
@@ -373,6 +406,7 @@ def _safe_stem(image_path: str | Path) -> str:
 
 def _write_stage7_markdown(
     run_name: str,
+    stage5_summary: dict[str, Any],
     checkpoint_row: dict[str, Any],
     layer_names: list[str],
     examples: list[FeatureMapExample],
@@ -396,7 +430,7 @@ def _write_stage7_markdown(
     lines.append("### Notes")
     lines.append("")
     lines.append("- Stage 7 uses saved cross-validation checkpoints and Stage 6 prediction outputs; no retraining was performed.")
-    lines.append("- The derived local dataset remains highly imbalanced, especially `joker` with only 5 total images.")
+    lines.append(f"- {_dataset_balance_note(stage5_summary)}")
     lines.append("- The repo venv matplotlib import was repaired via a local overlay so pyplot-based PNG rendering can run again.")
 
     with Path(artifacts.summary_md).open("w", encoding="utf-8") as handle:
@@ -514,12 +548,19 @@ def build_stage7_feature_maps(
             "Stage 7 uses the best saved cross-validation checkpoint rather than retraining.",
             "Example images were selected from the Stage 6 aggregated correct predictions for the chosen fold.",
             "The repo venv matplotlib import was repaired via a local overlay so pyplot-based rendering works again.",
-            "The derived local dataset remains highly imbalanced, especially `joker` with only 5 total images.",
+            _dataset_balance_note(stage5_summary),
         ],
     }
     with Path(artifacts.summary_json).open("w", encoding="utf-8") as handle:
         json.dump(result, handle, indent=2)
-    _write_stage7_markdown(run_name=run_name, checkpoint_row=checkpoint_row, layer_names=layer_names, examples=selected_examples, artifacts=artifacts)
+    _write_stage7_markdown(
+        run_name=run_name,
+        stage5_summary=stage5_summary,
+        checkpoint_row=checkpoint_row,
+        layer_names=layer_names,
+        examples=selected_examples,
+        artifacts=artifacts,
+    )
     return result
 
 

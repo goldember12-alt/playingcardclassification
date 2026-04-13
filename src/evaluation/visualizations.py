@@ -115,6 +115,39 @@ def _discover_stage5_summary_json() -> Path:
     return candidate_paths[-1]
 
 
+def _dataset_balance_note(stage5_summary: dict[str, Any]) -> str:
+    fold_summary = stage5_summary.get("fold_summary", {})
+    counts = {
+        str(class_name): int(count)
+        for class_name, count in dict(fold_summary.get("pool_class_counts", {})).items()
+    }
+    if not counts:
+        return "The dataset remains imbalanced, but class-count details were not available in the saved run summary."
+
+    smallest_class_name, smallest_class_count = min(counts.items(), key=lambda item: (item[1], item[0]))
+    validation_counts = [
+        int(class_counts.get(smallest_class_name, 0))
+        for class_counts in dict(fold_summary.get("validation_class_counts", {})).values()
+    ]
+    if validation_counts:
+        min_count = min(validation_counts)
+        max_count = max(validation_counts)
+        if min_count == max_count:
+            fold_detail = f"Each validation fold includes {min_count} `{smallest_class_name}` examples."
+        else:
+            fold_detail = (
+                f"Validation folds include between {min_count} and {max_count} "
+                f"`{smallest_class_name}` examples."
+            )
+    else:
+        fold_detail = "Per-fold validation counts were not available in the saved summary."
+
+    return (
+        f"The dataset remains imbalanced; `{smallest_class_name}` is the smallest class with "
+        f"{smallest_class_count} images. {fold_detail}"
+    )
+
+
 def _load_stage5_summary(stage5_summary_path: str | Path | None = None) -> dict[str, Any]:
     summary_path = Path(stage5_summary_path) if stage5_summary_path else _discover_stage5_summary_json()
     with summary_path.open("r", encoding="utf-8") as handle:
@@ -469,7 +502,7 @@ def _write_stage6_markdown(
     lines.append("### Notes")
     lines.append("")
     lines.append("- Stage 6 reuses the completed cross-validation checkpoints and logs without retraining.")
-    lines.append("- The derived local dataset remains highly imbalanced, especially `joker` with only 5 total images.")
+    lines.append(f"- {_dataset_balance_note(stage5_summary)}")
     if overall_accuracy < 0.90:
         lines.append("- Mean validation performance remains below the project's 90% threshold, so Stage 8 will require an augmentation or improvement pass.")
     else:
@@ -577,7 +610,7 @@ def build_stage6_visualizations(
     overall_accuracy = float(predictions["is_correct"].mean()) if not predictions.empty else 0.0
     notes = [
         "Stage 6 visualizations were built from the completed cross-validation run without retraining.",
-        "The derived local dataset is highly imbalanced, especially `joker` with only 5 total images.",
+        _dataset_balance_note(stage5_summary),
     ]
     if overall_accuracy < 0.90:
         notes.append("Because validation accuracy remains below 90%, Stage 8 will need an augmentation or improvement pass.")

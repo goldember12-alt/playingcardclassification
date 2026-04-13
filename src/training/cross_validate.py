@@ -91,6 +91,35 @@ def _fold_result_row(history: Any, summary: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _dataset_balance_note(fold_summary: FoldSummary) -> str:
+    counts = {str(class_name): int(count) for class_name, count in fold_summary.pool_class_counts.items()}
+    if not counts:
+        return "The dataset remains imbalanced, but class-count details were not available in the saved fold summary."
+
+    smallest_class_name, smallest_class_count = min(counts.items(), key=lambda item: (item[1], item[0]))
+    validation_counts = [
+        int(class_counts.get(smallest_class_name, 0))
+        for class_counts in fold_summary.validation_class_counts.values()
+    ]
+    if validation_counts:
+        min_count = min(validation_counts)
+        max_count = max(validation_counts)
+        if min_count == max_count:
+            fold_detail = f"Each validation fold includes {min_count} `{smallest_class_name}` examples."
+        else:
+            fold_detail = (
+                f"Validation folds include between {min_count} and {max_count} "
+                f"`{smallest_class_name}` examples."
+            )
+    else:
+        fold_detail = "Per-fold validation counts were not available in the saved summary."
+
+    return (
+        f"The dataset remains imbalanced; `{smallest_class_name}` is the smallest class with "
+        f"{smallest_class_count} images. {fold_detail}"
+    )
+
+
 def _aggregate_metrics(per_fold_results: Any) -> tuple[dict[str, dict[str, float]], Any]:
     pandas = _require_pandas()
     if not isinstance(per_fold_results, pandas.DataFrame):
@@ -202,7 +231,7 @@ def _write_markdown_summary(
     lines.append("### Notes")
     lines.append("")
     lines.append("- This run uses the derived local 14-rank dataset under `data/processed/rank14_from_local_raw/`.")
-    lines.append("- The dataset remains highly imbalanced; `joker` has only 5 total images, so each validation fold has 1 joker image.")
+    lines.append(f"- {_dataset_balance_note(fold_summary)}")
     for note in fold_summary.notes:
         lines.append(f"- {note}")
 
@@ -401,7 +430,7 @@ def run_cross_validation(
         "artifacts": artifacts.to_dict(),
         "notes": [
             "This run uses deterministic 5-fold stratified cross-validation over the derived local 14-rank dataset.",
-            "The dataset is highly imbalanced, especially `joker` with only 5 images total.",
+            _dataset_balance_note(fold_summary),
             "Training augmentation was enabled." if use_augmentation else "Training augmentation was not enabled.",
             f"Class weighting strategy: `{class_weight_strategy}`.",
             f"Sampling strategy: `{sampling_strategy}`.",

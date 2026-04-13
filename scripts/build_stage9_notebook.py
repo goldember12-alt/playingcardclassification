@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import textwrap
 from pathlib import Path
 
@@ -15,6 +16,14 @@ def code_cell(source: str):
 
 
 def build_notebook() -> nbf.NotebookNode:
+    repo_root = Path(__file__).resolve().parents[1]
+    dataset_summary = json.loads(
+        (repo_root / "data" / "processed" / "rank14_from_local_raw" / "summary.json").read_text(encoding="utf-8")
+    )
+    rank_counts = {str(class_name): int(count) for class_name, count in dataset_summary["rank_counts"].items()}
+    smallest_class_name, smallest_class_count = min(rank_counts.items(), key=lambda item: (item[1], item[0]))
+    largest_class_name, largest_class_count = max(rank_counts.items(), key=lambda item: (item[1], item[0]))
+
     cells = [
         md_cell(
             """
@@ -191,12 +200,12 @@ def build_notebook() -> nbf.NotebookNode:
             """
         ),
         md_cell(
-            """
+            f"""
             ## Dataset Summary
 
             The canonical dataset for this project is the derived 14-rank local dataset at `data/processed/rank14_from_local_raw/`. It collapses suit-specific labels into rank targets while keeping all 14 classes available for cross-validation.
 
-            The main caveat is still class imbalance. `ace`, `eight`, and `five` are common, while `joker` has only 5 images total. That affects how confidently we should interpret per-class behavior, especially in the confusion matrices.
+            The main caveat is still class imbalance. The smallest class is `{smallest_class_name}` with {smallest_class_count} images, while the largest class is `{largest_class_name}` with {largest_class_count}. That affects how confidently we should interpret per-class behavior, especially in the confusion matrices.
             """
         ),
         code_cell(
