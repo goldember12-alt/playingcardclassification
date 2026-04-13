@@ -1,0 +1,17 @@
+# Stage 8 augmentation improvement pass.
+inherits: base.yaml
+experiment_name: stage8_augmented
+strategy: bottleneck
+model:
+  pretrained_backbone: true
+  freeze_backbone: true
+training:
+  num_epochs: 5
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.0
+  num_workers: 0
+  device: auto
+augmentation:
+  enabled: true
+  profile: stage8_cards

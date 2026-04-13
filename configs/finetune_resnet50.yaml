@@ -1,0 +1,3 @@
+# Fine-tuning experiment placeholder.
+inherits: base.yaml
+freeze_backbone: false

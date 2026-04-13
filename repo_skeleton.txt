@@ -1,0 +1,116 @@
+OliviaMLAssignment/
+├── AGENTS.md
+├── README.md
+├── handoff.md
+├── repo_skeleton.txt
+├── requirements.txt
+├── .gitignore
+├── data/
+│   ├── raw/
+│   │   └── .gitkeep
+│   ├── interim/
+│   │   └── .gitkeep
+│   └── processed/
+│       └── .gitkeep
+├── notebooks/
+│   ├── HW5_cards_classification.ipynb
+│   └── exports/
+│       └── .gitkeep
+├── src/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── dataset.py
+│   │   ├── folds.py
+│   │   └── transforms.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── backbone.py
+│   │   ├── classifier.py
+│   │   └── feature_maps.py
+│   ├── training/
+│   │   ├── __init__.py
+│   │   ├── train_one_fold.py
+│   │   ├── cross_validate.py
+│   │   ├── losses.py
+│   │   └── metrics.py
+│   ├── evaluation/
+│   │   ├── __init__.py
+│   │   ├── predict.py
+│   │   ├── confusion.py
+│   │   └── visualizations.py
+│   └── utils/
+│       ├── __init__.py
+│       ├── seed.py
+│       ├── paths.py
+│       └── logging_utils.py
+├── configs/
+│   ├── base.yaml
+│   ├── bottleneck_resnet50.yaml
+│   ├── finetune_resnet50.yaml
+│   └── augmentation.yaml
+├── reports/
+│   ├── figures/
+│   │   └── .gitkeep
+│   ├── tables/
+│   │   └── .gitkeep
+│   └── notes/
+│       └── .gitkeep
+├── outputs/
+│   ├── folds/
+│   │   └── .gitkeep
+│   ├── checkpoints/
+│   │   └── .gitkeep
+│   ├── logs/
+│   │   └── .gitkeep
+│   └── feature_maps/
+│       └── .gitkeep
+└── progress/
+    ├── current_stage.md
+    ├── decisions.md
+    ├── blockers.md
+    └── next_prompt.md
+
+Purpose notes
+
+AGENTS.md
+- Main operating instructions for Codex.
+- Defines requirements, order of work, and documentation rules.
+
+README.md
+- Human-readable project overview and assignment summary.
+
+handoff.md
+- Live state of the project at each handoff.
+- Fulfills the role that current_stage/progress would serve at the very beginning.
+
+requirements.txt
+- Python dependencies for the project.
+
+notebooks/HW5_cards_classification.ipynb
+- Final notebook submission artifact.
+
+src/data/
+- Dataset loading, fold generation, and transforms.
+
+src/models/
+- Pretrained model loading, classifier head, and feature-map extraction.
+
+src/training/
+- Training and cross-validation logic.
+
+src/evaluation/
+- Prediction helpers and result visualizations.
+
+configs/
+- Experiment configuration files.
+
+reports/
+- Saved figures, tables, and notes for notebook inclusion.
+
+outputs/
+- Checkpoints, logs, fold metrics, and feature maps.
+
+progress/
+- Optional finer-grained status files to use after initial scaffold.

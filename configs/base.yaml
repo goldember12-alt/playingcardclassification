@@ -1,0 +1,47 @@
+# Base configuration placeholder for the cards classification project.
+project_name: cards_classification_hw5
+random_seed: 42
+num_folds: 5
+num_classes: 14
+image_size: 224
+model_name: resnet50
+strategy: bottleneck
+model:
+  pretrained_backbone: true
+  freeze_backbone: true
+  unfreeze_from:
+  classifier_hidden_dim:
+  classifier_dropout: 0.0
+training:
+  num_epochs: 5
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.0
+  num_workers: 0
+  device: auto
+  scheduler_name: none
+  scheduler_min_lr: 0.000001
+  scheduler_plateau_factor: 0.5
+  scheduler_plateau_patience: 2
+  early_stopping_patience:
+  early_stopping_min_delta: 0.0
+dataset:
+  raw_data_dir: data/processed
+  dataset_name: rank14_from_local_raw
+  label_granularity: rank
+  metadata_csv_name: cards.csv
+  expected_class_names:
+    - ace
+    - two
+    - three
+    - four
+    - five
+    - six
+    - seven
+    - eight
+    - nine
+    - ten
+    - jack
+    - queen
+    - king
+    - joker

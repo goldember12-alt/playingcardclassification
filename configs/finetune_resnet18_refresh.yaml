@@ -1,0 +1,26 @@
+# Refreshed full-dataset fine-tuning baseline selected after the April 12 screening pass.
+inherits: base.yaml
+model_name: resnet18
+strategy: fine_tune
+model:
+  pretrained_backbone: true
+  freeze_backbone: false
+  unfreeze_from:
+  classifier_hidden_dim:
+  classifier_dropout: 0.0
+training:
+  num_epochs: 1
+  batch_size: 64
+  learning_rate: 0.0002
+  weight_decay: 0.0001
+  num_workers: 0
+  device: cpu
+  scheduler_name: plateau
+  scheduler_min_lr: 0.000001
+  scheduler_plateau_factor: 0.5
+  scheduler_plateau_patience: 1
+  early_stopping_patience:
+  early_stopping_min_delta: 0.0
+augmentation:
+  use_augmentation: false
+  augmentation_profile:

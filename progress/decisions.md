@@ -1,0 +1,172 @@
+# Decisions
+
+- Framework default: PyTorch.
+- Baseline backbone default: pretrained ResNet50.
+- Initial transfer-learning strategy: bottlenecking.
+- Notebook assembly is deferred until the reusable pipeline is working.
+- Canonical dataset discovery now defaults to the derived processed dataset under `data/processed/rank14_from_local_raw/`, while raw-data auditing still targets `data/raw/` when explicitly requested.
+- Stage 1 assumes the assignment's expected 14 rank classes are `ace` through `king` plus `joker`, but the loader validates against whatever is actually present locally.
+- Dataset summaries are generated from discovered files rather than a hardcoded dataset folder name.
+- Stage 2 fold generation works from an item-level metadata inventory rather than re-reading directory trees ad hoc.
+- For flat class-folder datasets, folds are generated from the `all` split.
+- For named split datasets, folds are generated from the combined non-test pool and any `test` split is left untouched as a holdout.
+- Fold generation requires strict stratification support; if any class in the fold pool has fewer than `k` samples, the code fails clearly instead of silently degrading.
+- Stage 3 defaults to a pretrained `ResNet50` backbone with the original classification layer removed and replaced by a project-specific classifier head.
+- Bottlenecking remains the default: backbone parameters are frozen unless an explicit unfreeze stage is requested.
+- The baseline classifier head defaults to a single linear layer, with optional hidden dimension and dropout hooks reserved for later controlled experiments.
+- The repo-local venv created by `bootstrap.ps1` is now the preferred interpreter for all future repo commands:
+  - `C:\Users\golde\.venvs\OliviaMLAssignment\Scripts\python.exe`
+- Stage 4 builds one-fold training from Stage 1 datasets, Stage 2 fold assignments, and Stage 3 model builders rather than introducing a separate training-only data path.
+- Per-epoch metrics are saved as CSV, and the best fold checkpoint is saved with a deterministic fold-specific filename.
+- CPU is the default execution path, with CUDA used only when explicitly requested or automatically available.
+- The local raw data audit found a split-based folder tree at `data/raw/`, but it currently reflects only a partial subset of the cards dataset.
+- `cards.csv` is the authoritative local metadata file for the current raw drop:
+  - 53 suit-specific labels
+  - 14 rank targets after normalizing CSV rank `xxx` to assignment label `joker`
+  - expected splits: `train`, `valid`, `test`
+- The on-disk folder tree is inconsistent with that metadata:
+  - `valid/` is missing locally
+  - only 1,866 of 8,155 CSV-referenced image paths exist locally
+  - the discovered folders still expose the 53-card schema, not a ready-to-train 14-rank schema
+- The two local `.h5` files are HDF5/Keras model artifacts and should be ignored by the current PyTorch pipeline.
+- Stage 5 fold generation should fail fast while the local raw data remains inconsistent, rather than silently building folds from a broken subset.
+- Because the raw split tree is all the user currently has access to, the repo now treats a derived processed dataset as the canonical training source instead of waiting for a corrected raw drop.
+- The canonical Stage 5 dataset is:
+  - `data/processed/rank14_from_local_raw/`
+  - flat class directories for the 14 assignment ranks
+  - built from all existing raw `train/` and `test/` images
+- Suit-specific card labels are collapsed into ranks by:
+  - `joker -> joker`
+  - `<rank> of <suit> -> <rank>`
+- The derived dataset is materialized with hard links to avoid duplicating the image payload while still giving the pipeline a clean 14-class folder tree.
+- The repo defaults now point to the derived processed dataset:
+  - `raw_data_dir = data/processed`
+  - `dataset_name = rank14_from_local_raw`
+- Stage 5 may proceed on the derived dataset, with the explicit caveat that the class distribution is highly imbalanced and `joker` has only 5 samples total.
+- Stage 5 baseline cross-validation is the run of record for downstream reporting:
+  - run name: `stage5_baseline`
+  - folds: 5
+  - epochs per fold: 5
+  - mean best-fold validation accuracy: about `0.7824`
+- Stage 6 reuses the saved Stage 5 checkpoints, fold assignments, and per-fold logs rather than retraining any models.
+- Because the repo venv's `matplotlib` install is broken in the current environment, Stage 6 visualization rendering uses Pillow-generated PNGs instead of `matplotlib.pyplot`.
+- Stage 6 outputs are organized under:
+  - `outputs/visualizations/stage5_baseline/`
+- The aggregated Stage 6 validation prediction pass covers all `1866` validation examples exactly once across the 5 folds and reproduces the saved Stage 5 mean validation accuracy to within rounding.
+- The best saved Stage 5 baseline checkpoint for downstream qualitative analysis is:
+  - fold `2`
+  - validation accuracy `0.8150134048257373`
+- Stage 7 uses that best checkpoint as the model of record for feature-map rendering instead of mixing checkpoints.
+- Stage 7 selects example inputs automatically from the Stage 6 aggregated correct-prediction table for the chosen fold.
+- The Stage 7 examples of record are:
+  - face cards: `queen`, `jack`
+  - number cards: `eight`, `five`
+- Stage 7 renders feature maps from two intermediate ResNet50 backbone layers:
+  - `backbone.layer3`
+  - `backbone.layer4`
+- The repo venv matplotlib issue was repaired with a non-destructive overlay fix:
+  - extracted `matplotlib-3.10.8` into `site-packages\\_matplotlib_overlay`
+  - added `zz_matplotlib_overlay.pth`
+  - verified `matplotlib.pyplot` imports and `Agg` backend usage now work
+- Stage 8 stays bounded to one controlled improvement strategy:
+  - data augmentation with the same frozen-backbone ResNet50 bottleneck setup used in Stage 5
+- The Stage 8 augmentation profile of record is `stage8_cards`, using:
+  - random resized crop
+  - small random rotation
+  - mild color jitter
+  - light perspective distortion
+- The dataset source, fold assignments, number of folds, epoch count, and base architecture were intentionally kept aligned with the Stage 5 baseline so the comparison would stay clean.
+- Torchvision pretrained-weight downloads now default to a writable project-local cache under `.tmp\\torch` via `src/models/backbone.py`.
+- The Stage 8 run of record is:
+  - `stage8_augmented`
+  - 5 folds
+  - 5 epochs per fold
+  - augmentation enabled
+  - augmentation profile `stage8_cards`
+- The Stage 8 augmentation attempt did not improve performance:
+  - baseline mean best-fold validation accuracy: about `0.7824`
+  - Stage 8 mean best-fold validation accuracy: about `0.7562`
+  - every fold performed worse than baseline
+- For Stage 9 notebook assembly, the Stage 5 baseline should remain the primary result, while Stage 8 should be presented as the required documented augmentation attempt that did not help.
+- Stage 9 reuses the saved Stage 5 through Stage 8 artifacts instead of rerunning training inside the notebook.
+- The final notebook of record is:
+  - `notebooks/HW5_cards_classification.ipynb`
+  - executed with visible outputs
+- A reproducible builder script now owns notebook assembly:
+  - `scripts/build_stage9_notebook.py`
+- The notebook's main narrative keeps the Stage 5 baseline as the primary model result and uses Stage 8 as a comparison section showing the unsuccessful augmentation attempt.
+- A grader-friendly HTML export was also produced:
+  - `notebooks/exports/HW5_cards_classification.html`
+- Notebook execution in this environment requires a documented Jupyter workaround on Windows:
+  - `JUPYTER_ALLOW_INSECURE_WRITES=true`
+  - `JUPYTER_RUNTIME_DIR=.tmp\\jupyter_runtime`
+- Post-notebook accuracy work is allowed because the user explicitly wants 90%+ accuracy before packaging.
+- The main Stage 5 failure mode is class collapse toward the dominant ranks:
+  - `ace`
+  - `eight`
+  - `five`
+- Training now supports:
+  - class-weighted loss
+  - weighted sampling
+  - separate classifier and backbone learning rates
+  - `adam` / `adamw` optimizer selection
+- Aggressive balancing is harmful on this dataset:
+  - balanced sampling plus effective-number weighting collapsed fold-0 validation accuracy to about `0.0508`
+- The best current candidate is:
+  - pretrained `ResNet50`
+  - fine-tune from `layer3`
+  - `AdamW`
+  - classifier LR `2e-4`
+  - backbone LR `2e-5`
+  - classifier hidden dim `256`
+  - classifier dropout `0.2`
+  - no augmentation
+  - sampling strategy `balanced`
+  - sampling weight power `0.25`
+  - 8 epochs
+- That candidate's clean 5-fold probe mean is about `0.8987`, which is just below the user's 90% minimum target.
+- A clean reproducible 10-epoch rerun of that candidate is the recommended next experiment before trying more radical changes.
+- The full original dataset is not recoverable from the current repo alone:
+  - `cards.csv` lists `8155` rows
+  - only `1866` referenced images exist locally
+  - no local archives are present under `data/raw/`
+  - the `.h5` files are Keras model artifacts, not hidden image bundles
+- The pipeline now supports stronger exploration paths:
+  - `convnext_tiny`
+  - `efficientnet_b0`
+  - cosine LR scheduling
+  - minority-only targeted augmentation
+- An `efficientnet_b0` probe underperformed badly on fold 0, so it is not currently the lead candidate.
+- A `resnet50 layer2` probe with cosine scheduling, larger images, and targeted minority augmentation did not beat the current best `layer3` candidate on fold 0.
+- A `resnet50 layer3` probe with cosine scheduling also did not beat the current best no-scheduler candidate on fold 0.
+- The current best clean 5-fold candidate remains the original `resnet50 layer3` soft-sampler 8-epoch run with mean validation accuracy about `0.8987`.
+- Superseding update on 2026-04-12:
+  - the earlier "partial subset only" data assumption is obsolete because the raw Kaggle dataset was restored locally
+  - `data/raw/` now contains `8154` image files across the original `train`, `valid`, and `test` splits
+  - `cards.csv` has `8155` rows, but the one-row mismatch is a non-image path: `train/ace of clubs/output`
+  - `data/processed/rank14_from_local_raw/` was rebuilt from the restored raw tree and now contains all `8154` images in the 14 assignment classes
+  - previously reported Stage 5 and Stage 8 accuracies should now be treated as stale with respect to the refreshed dataset
+  - the two local reference notebooks strongly suggest the next serious path should prioritize:
+    - full fine-tuning over frozen transfer learning
+    - conservative learning rates
+    - simple heads
+    - light augmentation rather than aggressive card-distorting transforms
+- The refreshed pipeline now supports the notebook-aligned bounded upgrades needed for the April 12 rerun:
+  - `resnet18`
+  - notebook-style light augmentation profile `notebook_cards`
+  - `ReduceLROnPlateau`
+  - early-stopping controls
+  - reusable one-fold probe-screen reporting
+- The refreshed one-fold probe screen ranked:
+  - `resnet50` full fine-tune linear head at `1e-4` first on raw fold-0 accuracy
+  - `resnet18` full fine-tune linear head at `2e-4` second, but with much better accuracy-per-runtime on CPU
+- The selected refreshed full 5-fold baseline is:
+  - run name `stage5_refresh_resnet18_ft_linear_lr2e4`
+  - pretrained `resnet18`
+  - full fine-tuning
+  - linear head
+  - `AdamW`
+  - LR `2e-4`
+  - no augmentation
+  - 1 epoch per fold
+- The refreshed 5-fold baseline of record achieved mean validation accuracy about `0.9218`, so the assignment is now above the `90%` threshold on the current dataset of record.

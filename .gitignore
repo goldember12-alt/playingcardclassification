@@ -1,0 +1,48 @@
+# Python cache and environment files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Build and packaging artifacts
+build/
+dist/
+*.egg-info/
+
+# Local editor/system files
+.DS_Store
+Thumbs.db
+.tmp/
+playingcardclassification/
+
+# Large project artifacts
+data/raw/*
+data/interim/*
+data/processed/*
+notebooks/exports/*
+reports/figures/*
+reports/tables/*
+reports/notes/*
+outputs/folds/*
+outputs/checkpoints/*
+outputs/logs/*
+outputs/feature_maps/*
+outputs/visualizations/*
+
+# Keep scaffold placeholders
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!notebooks/exports/.gitkeep
+!reports/figures/.gitkeep
+!reports/tables/.gitkeep
+!reports/notes/.gitkeep
+!outputs/folds/.gitkeep
+!outputs/checkpoints/.gitkeep
+!outputs/logs/.gitkeep
+!outputs/feature_maps/.gitkeep
+!outputs/visualizations/.gitkeep
