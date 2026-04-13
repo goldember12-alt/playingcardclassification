@@ -546,7 +546,7 @@ def summarize_dataset(
 
     if not summary.class_count_matches_expectation:
         summary.notes.append(
-            f"Discovered {len(class_names)} classes, which does not match the assignment expectation of "
+            f"Discovered {len(class_names)} classes, which does not match the project expectation of "
             f"{len(expected_classes)} classes."
         )
 
@@ -582,12 +582,12 @@ def summarize_dataset(
 
     if summary.assignment_target_schema_supported:
         summary.notes.append(
-            "The metadata rank schema matches the assignment's 14 target classes after normalizing the CSV `xxx` "
+            "The metadata rank schema matches the project's 14 target classes after normalizing the CSV `xxx` "
             "joker label to `joker`."
         )
     elif summary.metadata_csv_found:
         summary.notes.append(
-            "The metadata rank schema does not cleanly match the assignment target classes and needs manual review."
+            "The metadata rank schema does not cleanly match the project target classes and needs manual review."
         )
 
     if (

@@ -101,7 +101,7 @@ def compare_runs(
         ].to_dict(orient="records"),
         "notes": [
             "Stage 8 keeps the Stage 5 baseline run as the comparison point of record.",
-            "Because mean validation accuracy stayed below 90%, this improvement pass is required for assignment compliance.",
+            "Because mean validation accuracy stayed below 90%, this improvement pass is required to meet the project's target.",
         ],
     }
 

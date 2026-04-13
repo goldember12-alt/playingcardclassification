@@ -18,6 +18,8 @@ dist/
 Thumbs.db
 .tmp/
 playingcardclassification/
+97-74-f1-with-fine-tuned-resnet-18-svm.ipynb
+99-62-accuracy-with-efficientnet-b0.ipynb
 
 # Large project artifacts
 data/raw/*

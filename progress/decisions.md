@@ -143,7 +143,7 @@
   - `cards.csv` has `8155` rows, but the one-row mismatch is a non-image path: `train/ace of clubs/output`
   - `data/processed/rank14_from_local_raw/` was rebuilt from the restored raw tree and now contains all `8154` images in the 14 project classes
   - previously reported Stage 5 and Stage 8 accuracies should now be treated as stale with respect to the refreshed dataset
-  - the two local reference notebooks strongly suggest the next serious path should prioritize:
+- two local comparison experiments strongly suggest the next serious path should prioritize:
     - full fine-tuning over frozen transfer learning
     - conservative learning rates
     - simple heads

@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project identity
-This repository is a standalone machine-learning project for playing-card image classification using a pretrained CNN and the Kaggle cards image dataset. The work should stay clean, modular, reproducible, and ready to present as a polished project.
+This repository is a machine-learning project for playing-card image classification using a pretrained CNN and the Kaggle cards image dataset. The work should stay clean, modular, reproducible, and ready to present as a polished project.
 
 Working directory:
 `${PROJECT_ROOT}`

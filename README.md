@@ -1,6 +1,6 @@
 # playingcardclassification
 
-`playingcardclassification` is a standalone computer-vision project for classifying playing-card images into 14 rank classes using transfer learning with pretrained CNNs.
+`playingcardclassification` is a computer-vision project for classifying playing-card images into 14 rank classes using transfer learning with pretrained CNNs.
 
 The repository is organized around a reproducible workflow:
 - preprocess and validate the dataset

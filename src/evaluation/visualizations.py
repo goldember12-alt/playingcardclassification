@@ -471,9 +471,9 @@ def _write_stage6_markdown(
     lines.append("- Stage 6 reuses the completed cross-validation checkpoints and logs without retraining.")
     lines.append("- The derived local dataset remains highly imbalanced, especially `joker` with only 5 total images.")
     if overall_accuracy < 0.90:
-        lines.append("- Mean validation performance remains below the assignment's 90% threshold, so Stage 8 will require an augmentation or improvement pass.")
+        lines.append("- Mean validation performance remains below the project's 90% threshold, so Stage 8 will require an augmentation or improvement pass.")
     else:
-        lines.append("- Mean validation performance now clears the assignment's 90% threshold on the refreshed full-dataset baseline.")
+        lines.append("- Mean validation performance now clears the project's 90% threshold on the refreshed full-dataset baseline.")
 
     with Path(artifacts.stage6_summary_md).open("w", encoding="utf-8") as handle:
         handle.write("\n".join(lines) + "\n")
@@ -582,7 +582,7 @@ def build_stage6_visualizations(
     if overall_accuracy < 0.90:
         notes.append("Because validation accuracy remains below 90%, Stage 8 will need an augmentation or improvement pass.")
     else:
-        notes.append("The refreshed full-dataset baseline already clears the assignment's 90% validation-accuracy threshold.")
+        notes.append("The refreshed full-dataset baseline already clears the project's 90% validation-accuracy threshold.")
 
     result = {
         "stage": "Stage 6",

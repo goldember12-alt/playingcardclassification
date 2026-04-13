@@ -1,1 +1,1 @@
-"""Top-level package for the HW5 cards classification project."""
+"""Top-level package for the playing card classification project."""

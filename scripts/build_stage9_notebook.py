@@ -18,11 +18,11 @@ def build_notebook() -> nbf.NotebookNode:
     cells = [
         md_cell(
             """
-            # HW5 Cards Classification
+            # Playing Card Classification
 
-            This notebook assembles the final assignment narrative from the saved full-dataset artifacts produced by the project pipeline. It reuses saved CSV, JSON, checkpoint, and PNG outputs rather than retraining in-place, which keeps the submission reproducible and notebook-ready.
+            This notebook assembles the saved full-dataset artifacts produced by the project pipeline. It reuses saved CSV, JSON, checkpoint, and PNG outputs rather than retraining in-place, which keeps the report reproducible and easy to review.
 
-            ## Assignment checklist
+            ## Project Checklist
 
             - Pretrained image-classification model: yes
             - Transfer-learning approach: fine-tuning
@@ -194,7 +194,7 @@ def build_notebook() -> nbf.NotebookNode:
             """
             ## Dataset Summary
 
-            The canonical dataset for this project is the derived 14-rank local dataset at `data/processed/rank14_from_local_raw/`. It is assignment-compatible because it collapses suit-specific labels into rank targets while keeping all 14 classes available for cross-validation.
+            The canonical dataset for this project is the derived 14-rank local dataset at `data/processed/rank14_from_local_raw/`. It collapses suit-specific labels into rank targets while keeping all 14 classes available for cross-validation.
 
             The main caveat is still class imbalance. `ace`, `eight`, and `five` are common, while `joker` has only 5 images total. That affects how confidently we should interpret per-class behavior, especially in the confusion matrices.
             """
@@ -468,7 +468,7 @@ def build_notebook() -> nbf.NotebookNode:
             """
             ## Conclusion
 
-            This notebook demonstrates a pretrained CNN workflow, real 5-fold cross-validation, saved result visualizations, and feature-map analysis for the full 14-class assignment dataset. The main grading story is built around the refreshed full-dataset baseline and its downstream artifacts.
+            This notebook demonstrates a pretrained CNN workflow, real 5-fold cross-validation, saved result visualizations, and feature-map analysis for the full 14-class dataset. The main narrative is built around the refreshed full-dataset baseline and its downstream artifacts.
             """
         ),
         code_cell(
@@ -520,7 +520,7 @@ def build_notebook() -> nbf.NotebookNode:
 
 def main() -> None:
     repo_root = Path(__file__).resolve().parents[1]
-    notebook_path = repo_root / "notebooks" / "HW5_cards_classification.ipynb"
+    notebook_path = repo_root / "notebooks" / "playingcardclassification.ipynb"
     notebook = build_notebook()
     notebook_path.parent.mkdir(parents=True, exist_ok=True)
     nbf.write(notebook, notebook_path)

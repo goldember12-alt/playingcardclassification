@@ -56,7 +56,7 @@ def build_train_transform(
         ]
     elif profile_name == "notebook_cards":
         # Keep the whole card visible and use only the light augmentation patterns
-        # that matched the strongest local ResNet-18 reference notebook.
+        # that matched the strongest local ResNet-18 reference run.
         steps = [
             transforms.Resize((image_size, image_size)),
             transforms.RandomHorizontalFlip(),
